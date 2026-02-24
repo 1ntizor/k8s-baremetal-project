@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-service
+spec:
+  type: NodePort      # Этот тип "выставляет" порт наружу на всех нодах
+  selector:
+    app: my-web-site  # ВАЖНО: этот селектор должен совпадать с labels из нашего Deployment!
+  ports:
+    - port: 80        # Порт самого сервиса внутри кластера
+      targetPort: 80  # Порт внутри контейнера nginx
+      nodePort: 30080 # Порт, по которому мы будем заходить с твоего ПК (диапазон 30000-32767)

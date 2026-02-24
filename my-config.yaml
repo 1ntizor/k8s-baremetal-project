@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Мой K8s Сайт</title>
+    </head>
+    <body>
+        <h1>Привет! Это мой сайт в Kubernetes!</h1>
+        <p>Этот текст пришел из ConfigMap и теперь он читается правильно.</p>
+    </body>
+    </html>
