@@ -1,0 +1,2 @@
+database/postgres-secret.yaml
+ingress/my-secret.yaml
