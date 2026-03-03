@@ -13,16 +13,28 @@ spec:
       labels:
         app: nginx
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - k8-worker-2
+      tolerations:
+      - key: "app"
+        operator: "Equal"
+        value: "database"
+        effect: "NoSchedule"
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.25.1
         ports:
         - containerPort: 80
-        # Загружаем простые настройки из ConfigMap
         envFrom:
         - configMapRef:
             name: app-config
-        # Загружаем пароль из Secret
         env:
         - name: DB_PASSWORD
           valueFrom:
@@ -36,3 +48,21 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "200m"
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          failureThreshold: 6
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
